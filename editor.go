@@ -41,17 +41,48 @@ func setupDefaultEditorArgs() ([]string, error) {
 	return args, nil
 }
 
+// RunLocal is like Run, but assumes the file to edit is locally saved on
+// disk rather than some remote content
+func RunLocal(o []byte, of string) error {
+	contents, err := os.ReadFile(of)
+	if err != nil {
+		return err
+	}
+
+	edited, _, err := Run(contents, of)
+	if err != nil {
+		return err
+	}
+
+	// If changes, overwrite the existing file
+	// Open the file for writing, creating it if it doesn't exist
+	file, err := os.OpenFile(of, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	// Write the content to the file
+	estr := string(edited)
+	_, err = file.WriteString(estr)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // Run will launch a editor to use a system defined editor such as vim to edit
 // configs in place. It saves that content to a temp file for use as well as
 // returning the raw bytes from the edit. It can optionally take an original
 // bytes of content which can be used to compare if any edits were made.
 func Run(o []byte, of string) ([]byte, string, error) {
 	var (
-		original = []byte{}
-		edited   = []byte{}
-		filePath string
-		err      error
-		suffix   string
+		original    = []byte{}
+		edited      = []byte{}
+		tmpfilePath string
+		err         error
+		suffix      string
 	)
 
 	// set an original if it exists
@@ -59,6 +90,7 @@ func Run(o []byte, of string) ([]byte, string, error) {
 		original = o
 	}
 	// Get the extension of the file
+	// The original file might not exist
 	suffix = filepath.Ext(of)
 
 	// TODO(briancain): We might have to massage a users shell path to properly
@@ -76,7 +108,7 @@ func Run(o []byte, of string) ([]byte, string, error) {
 
 	// TODO(briancain): Prefix is from the original CLI that invoked this
 	prefix := fmt.Sprintf("%s-edit-", filepath.Base(os.Args[0]))
-	edited, filePath, err = edit.LaunchWithTmp(prefix, suffix, original, buf)
+	edited, tmpfilePath, err = edit.LaunchWithTmp(prefix, suffix, original, buf)
 	if err != nil {
 		return nil, "", err
 	}
@@ -85,7 +117,7 @@ func Run(o []byte, of string) ([]byte, string, error) {
 		return nil, "", fmt.Errorf("edited file matches original content")
 	}
 
-	return edited, filePath, nil
+	return edited, tmpfilePath, nil
 }
 
 func (e *Editor) LaunchEditor(filePath string) error {
