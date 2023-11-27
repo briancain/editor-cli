@@ -43,12 +43,13 @@ func setupDefaultEditorArgs() ([]string, error) {
 
 // RunLocal is like Run, but assumes the file to edit is locally saved on
 // disk rather than some remote content
-func RunLocal(o []byte, of string) error {
+func RunLocal(of string) error {
 	contents, err := os.ReadFile(of)
 	if err != nil {
 		return err
 	}
 
+	// Call run on the local file, given its contents
 	edited, _, err := Run(contents, of)
 	if err != nil {
 		return err
