@@ -4,6 +4,11 @@ A simple editor package for Golang CLIs. Similar to `kubectl patch`.
 
 ![](img/example-edit.gif)
 
+## Configuration
+
+This package will respect the `$EDITOR` environment variable when launched. By
+default if no env var is found, it will use `vim` to edit the requested file.
+
 ## Usage
 
 This repo is meant to be used as a package for other Golang CLI projects.
