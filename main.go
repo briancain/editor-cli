@@ -18,12 +18,16 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		// Run the editor
+		// Run the editor to get the edited contents
 		edited, _, err := Run(contents, filePathToEdit)
 		if err != nil {
 			fmt.Println("File editing error: ", err)
 			os.Exit(1)
 		}
+
+		// TODO(briancain): This is where you can run your parsers and validators
+		// on the edited text so you can show any parse or lint errors prior to
+		// saving the file
 
 		// If changes, overwrite the existing file
 		// Open the file for writing, creating it if it doesn't exist
