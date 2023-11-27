@@ -17,6 +17,9 @@ func TestEditor(t *testing.T) {
 
 	t.Run("creates a new editor with default args", func(t *testing.T) {
 		testDefaultShell := os.Getenv("SHELL")
+		if testDefaultShell == "" {
+			testDefaultShell = defaultShell
+		}
 		r := require.New(t)
 		edit, err := NewEditor([]string{})
 		r.NoError(err)
