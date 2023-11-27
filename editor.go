@@ -76,13 +76,10 @@ func RunLocal(o []byte, of string) error {
 // configs in place. It saves that content to a temp file for use as well as
 // returning the raw bytes from the edit. It can optionally take an original
 // bytes of content which can be used to compare if any edits were made.
-func Run(o []byte, of string) ([]byte, string, error) {
+func Run(o []byte, of string) (edited []byte, tmpfilePath string, err error) {
 	var (
-		original    = []byte{}
-		edited      = []byte{}
-		tmpfilePath string
-		err         error
-		suffix      string
+		original = []byte{}
+		suffix   string
 	)
 
 	// set an original if it exists
