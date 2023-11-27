@@ -1,6 +1,8 @@
 # Editor CLI
 
-A simple editor package for Golang CLIs. Similar to `kubectl patch`.
+A simple editor package for Golang CLIs. Similar to `kubectl patch`. Edit
+content from a remote server, or content locally on disk, and overwrite the
+results using your favorite editor.
 
 ![](img/example-edit.gif)
 
@@ -29,6 +31,8 @@ if err != nil {
         fmt.Println("File editing error: ", err)
         os.Exit(1)
 }
+
+// You could also send this edited content back to a server to update it.
 
 // If changes, overwrite the original existing file
 file, err := os.OpenFile(filePathToEdit, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
