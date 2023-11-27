@@ -26,11 +26,19 @@ It has two main functions you can use as a CLI author for editing files:
 The example below is a shortened version of `main.go` using the Run version:
 
 ```golang
+contents, err := client.GetConfig(ctx, ...)
+if err != nil { ... }
+
 // Run the editor to let the user edit the contents in a tmp file
 edited, _, err := Run(contents, filePathToEdit)
 if err != nil {
         fmt.Println("File editing error: ", err)
         os.Exit(1)
+}
+
+// Take the locally edited content and send it back
+if err := client.SetConfig(ctx, edited); err != nil {
+    ...
 }
 ```
 
