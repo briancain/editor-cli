@@ -2,6 +2,8 @@
 
 A simple editor package for Golang CLIs. Similar to `kubectl patch`.
 
+![](img/example-edit.gif)
+
 ## Usage
 
 This repo is meant to be used as a package for other Golang CLI projects.
