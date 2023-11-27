@@ -25,6 +25,14 @@ type Editor struct {
 }
 
 func NewEditor(args []string) (*Editor, error) {
+	var err error
+	if len(args) == 0 {
+		args, err = setupDefaultEditorArgs()
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return &Editor{
 		Args: args,
 	}, nil
